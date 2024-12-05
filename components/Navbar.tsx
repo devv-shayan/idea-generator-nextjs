@@ -85,13 +85,6 @@ export default function Navbar() {
                       {item.title}
                     </Link>
                   ))}
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        avatarBox: "w-8 h-8",
-                      },
-                    }}
-                  />
                 </div>
               </SheetContent>
             </Sheet>
