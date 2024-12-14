@@ -11,9 +11,16 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { useAuth, UserButton } from "@clerk/nextjs";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils"; // Import utility for conditional classes.
 import { usePathname } from "next/navigation"; // Correct usePathname import
+import { SettingsModal } from "./SettingsModal";
 
 const navigationItems = [
   { title: "Videos", href: "/videos" },
@@ -35,9 +42,9 @@ export default function Navbar() {
         </div>
 
         {isSignedIn && (
-          <div className="ml-auto flex items-center space-x-4">
+          <div className="ml-auto flex items-center ">
             {/* Desktop Navigation */}
-            <NavigationMenu className="hidden md:flex">
+            <NavigationMenu className="hidden md:flex md:gap-10">
               <NavigationMenuList>
                 {navigationItems.map((item) => (
                   <NavigationMenuItem key={item.title}>
@@ -46,33 +53,46 @@ export default function Navbar() {
                       className={cn(
                         "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
                         pathname.startsWith(item.href)
-                          ? "border-b-2 border-purple-600 pb-[6px]" // Active link styling
-                          : "pb-[8px]" // Non-active link padding
+                          ? "bg-black text-white" // Active link styling
+                          : "bg-white border text-black" // Non-active link padding
                       )}
                     >
                       {item.title}
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 ))}
+                <SettingsModal />
+
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8",
+                    },
+                  }}
+                />
               </NavigationMenuList>
             </NavigationMenu>
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            />
-            
 
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="md:hidden">
-                  <Menu className="h-6 w-6" />
-                  <span className="sr-only">Toggle navigation menu</span>
-                </Button>
-              </SheetTrigger>
+              <SheetHeader>
+                <SheetTitle className="flex  flex-row-reverse gap-3 md:hidden">
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Menu className="h-6 w-6" />
+                      <span className="sr-only">Toggle navigation menu</span>
+                    </Button>
+                  </SheetTrigger>
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-8 h-8",
+                      },
+                    }}
+                  />
+                  <SettingsModal />
+                </SheetTitle>
+              </SheetHeader>
               <SheetContent side="right">
                 <div className="grid gap-2 py-6">
                   {navigationItems.map((item) => (
